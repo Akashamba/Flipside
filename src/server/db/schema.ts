@@ -2,7 +2,13 @@
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
 import { sql } from "drizzle-orm";
-import { index, pgTableCreator } from "drizzle-orm/pg-core";
+import {
+  index,
+  pgTableCreator,
+  text,
+  timestamp,
+  uuid,
+} from "drizzle-orm/pg-core";
 
 /**
  * This is an example of how to use the multi-project schema feature of Drizzle ORM. Use the same
@@ -12,16 +18,16 @@ import { index, pgTableCreator } from "drizzle-orm/pg-core";
  */
 export const createTable = pgTableCreator((name) => `flipside_${name}`);
 
-export const posts = createTable(
-  "post",
+export const articles = createTable(
+  "article",
   (d) => ({
-    id: d.integer().primaryKey().generatedByDefaultAsIdentity(),
-    name: d.varchar({ length: 256 }),
-    createdAt: d
-      .timestamp({ withTimezone: true })
-      .default(sql`CURRENT_TIMESTAMP`)
-      .notNull(),
-    updatedAt: d.timestamp({ withTimezone: true }).$onUpdate(() => new Date()),
+    id: uuid("id").defaultRandom().primaryKey(),
+    userId: uuid("user_id").notNull(), // Clerk user ID
+    url: text("url").notNull(),
+    title: text("title"),
+    description: text("description"),
+    tags: text("tags"),
+    createdAt: timestamp("created_at").defaultNow(),
   }),
-  (t) => [index("name_idx").on(t.name)],
+  (t) => [index("title_idx").on(t.title)],
 );
