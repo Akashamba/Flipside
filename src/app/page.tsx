@@ -1,6 +1,6 @@
 import Link from "next/link";
 
-import { api, HydrateClient } from "@/trpc/server";
+// import { api, HydrateClient } from "@/trpc/server";
 import { SignIn, SignInButton } from "@clerk/nextjs";
 
 export default async function Home() {
