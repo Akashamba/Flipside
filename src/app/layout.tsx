@@ -23,9 +23,11 @@ export default function RootLayout({
 }: Readonly<{ children: React.ReactNode }>) {
   return (
     <ClerkProvider>
-      <html lang="en">
-        <body>{children}</body>
-      </html>
+      <TRPCReactProvider>
+        <html lang="en">
+          <body>{children}</body>
+        </html>
+      </TRPCReactProvider>
     </ClerkProvider>
   );
 }

@@ -2,7 +2,7 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { articles } from "@/server/db/schema";
 import { eq, and } from "drizzle-orm";
-import { auth, getAuth } from "@clerk/nextjs/server";
+import { auth } from "@clerk/nextjs/server";
 import { TRPCError } from "@trpc/server";
 
 export const articlesRouter = createTRPCRouter({
