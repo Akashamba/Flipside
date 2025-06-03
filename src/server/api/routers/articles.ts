@@ -30,6 +30,7 @@ export const articlesRouter = createTRPCRouter({
         .values({
           userId: userId,
           url: input.url,
+          // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
           title: input.title || metadata.title || input.url,
           description: input.description,
           tags: input.tags,
