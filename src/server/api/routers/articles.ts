@@ -27,7 +27,7 @@ export const articlesRouter = createTRPCRouter({
         .values({
           userId: userId,
           url: input.url,
-          title: input.title,
+          title: input.title ?? input.url,
           description: input.description,
           tags: input.tags,
         })
