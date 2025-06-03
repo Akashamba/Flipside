@@ -1,7 +1,6 @@
 // Example model schema from the Drizzle docs
 // https://orm.drizzle.team/docs/sql-schema-declaration
 
-import { sql } from "drizzle-orm";
 import {
   index,
   pgTableCreator,
@@ -20,9 +19,9 @@ export const createTable = pgTableCreator((name) => `flipside_${name}`);
 
 export const articles = createTable(
   "article",
-  (d) => ({
+  () => ({
     id: uuid("id").defaultRandom().primaryKey(),
-    userId: uuid("user_id").notNull(), // Clerk user ID
+    userId: text("user_id").notNull(), // Clerk user ID
     url: text("url").notNull(),
     title: text("title"),
     description: text("description"),

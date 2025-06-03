@@ -1,18 +1,19 @@
-import Link from "next/link";
-
 // import { api, HydrateClient } from "@/trpc/server";
-import { SignIn, SignInButton } from "@clerk/nextjs";
-import Navbar from "./components/navbar";
+import { SignedIn, SignedOut } from "@clerk/nextjs";
+import Navbar from "../components/navbar";
+import HomePage from "@/components/HomePage";
+import LandingPage from "@/components/LandingPage";
 
 export default async function Home() {
-  // const hello = await api.post.hello({ text: "from tRPC" });
-
-  // void api.post.getLatest.prefetch();
-
   return (
     <>
       <Navbar />
-      <div>Hello</div>
+      <SignedIn>
+        <HomePage />
+      </SignedIn>
+      <SignedOut>
+        <LandingPage />
+      </SignedOut>
     </>
   );
 }
