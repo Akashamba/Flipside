@@ -9,7 +9,10 @@ export default function Navbar() {
         <UserButton />
       </SignedIn>
       <SignedOut>
-        <Link href="/sign-in">Sign in</Link>
+        <div className="flex gap-2">
+          <Link href="/sign-in">Sign in</Link>
+          <Link href="/sign-up">Sign up</Link>
+        </div>
       </SignedOut>
     </div>
   );

@@ -8,8 +8,9 @@ export default async function Home() {
   return (
     <>
       <Navbar />
-      <HomePage />
-      <SignedIn></SignedIn>
+      <SignedIn>
+        <HomePage />
+      </SignedIn>
       <SignedOut>
         <LandingPage />
       </SignedOut>
