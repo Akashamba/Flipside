@@ -4,6 +4,7 @@ import { articles } from "@/server/db/schema";
 import { eq, and } from "drizzle-orm";
 import { auth } from "@clerk/nextjs/server";
 import { TRPCError } from "@trpc/server";
+import { getMetadata } from "@/lib/utils";
 
 export const articlesRouter = createTRPCRouter({
   // POST equivalent - save URL
@@ -21,13 +22,15 @@ export const articlesRouter = createTRPCRouter({
       const { userId } = await auth();
       if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
 
+      const metadata = await getMetadata(input.url);
+
       //   If user is authenticated
       const article = await ctx.db
         .insert(articles)
         .values({
           userId: userId,
           url: input.url,
-          title: input.title ?? input.url,
+          title: input.title || metadata.title || input.url,
           description: input.description,
           tags: input.tags,
         })
