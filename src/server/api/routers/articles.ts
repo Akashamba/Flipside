@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { articles } from "@/server/db/schema";
-import { eq, and } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import { auth } from "@clerk/nextjs/server";
 import { TRPCError } from "@trpc/server";
 import { getMetadata } from "@/lib/utils";
@@ -50,7 +50,7 @@ export const articlesRouter = createTRPCRouter({
       .select()
       .from(articles)
       .where(eq(articles.userId, userId))
-      .orderBy(articles.createdAt);
+      .orderBy(desc(articles.createdAt));
   }),
 
   // DELETE equivalent
