@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { articles } from "@/server/db/schema";
-import { eq, and } from "drizzle-orm";
+import { eq, and, desc } from "drizzle-orm";
 import { auth } from "@clerk/nextjs/server";
 import { TRPCError } from "@trpc/server";
 import { getMetadata } from "@/lib/utils";
@@ -50,7 +50,7 @@ export const articlesRouter = createTRPCRouter({
       .select()
       .from(articles)
       .where(eq(articles.userId, userId))
-      .orderBy(articles.createdAt);
+      .orderBy(desc(articles.createdAt));
   }),
 
   // DELETE equivalent
@@ -67,11 +67,12 @@ export const articlesRouter = createTRPCRouter({
     }),
 
   // PUT equivalent - update tags
-  updateTags: publicProcedure
+  updateArticle: publicProcedure
     .input(
       z.object({
         id: z.string().uuid(),
-        tags: z.string(),
+        title: z.string().optional(),
+        tags: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -81,7 +82,10 @@ export const articlesRouter = createTRPCRouter({
 
       return ctx.db
         .update(articles)
-        .set({ tags: input.tags })
+        .set({
+          title: input.title,
+          tags: input.tags,
+        })
         .where(and(eq(articles.id, input.id), eq(articles.userId, userId)));
     }),
 });
