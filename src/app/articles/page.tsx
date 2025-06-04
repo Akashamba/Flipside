@@ -10,46 +10,6 @@ import { EditArticleModal } from "@/components/modals/edit-article-modal";
 import type { Article } from "@/lib/types";
 import { api } from "@/trpc/react";
 
-// Mock articles data
-const mockArticles: Article[] = [
-  {
-    id: "1",
-    url: "https://example.com/article-1",
-    title: "The Future of Web Development",
-    description:
-      "Exploring the latest trends and technologies shaping the future of web development.",
-    imageUrl: "/placeholder.svg?height=200&width=300",
-    createdAt: new Date("2024-01-15"),
-    updatedAt: new Date("2024-01-15"),
-    userId: "user-abc",
-    tags: "",
-  },
-  {
-    id: "2",
-    url: "https://example.com/article-2",
-    title: "Understanding React Server Components",
-    description:
-      "A deep dive into React Server Components and how they change the way we build applications.",
-    imageUrl: "/placeholder.svg?height=200&width=300",
-    createdAt: new Date("2024-01-14"),
-    updatedAt: new Date("2024-01-14"),
-    userId: "user-abc",
-    tags: "",
-  },
-  {
-    id: "3",
-    url: "https://example.com/article-3",
-    title: "CSS Grid vs Flexbox: When to Use Which",
-    description:
-      "A comprehensive guide to choosing between CSS Grid and Flexbox for your layouts.",
-    imageUrl: "/placeholder.svg?height=200&width=300",
-    createdAt: new Date("2024-01-13"),
-    updatedAt: new Date("2024-01-13"),
-    userId: "user-abc",
-    tags: "",
-  },
-];
-
 export default function ArticlesPage() {
   const {
     data: articles,
