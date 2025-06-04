@@ -18,18 +18,17 @@ export default function ArticleList({
   return (
     <div>
       {articles.map((article: Article) => (
-        <Link key={article.id} href={article.url}>
-          <div
-            key={article.id}
-            className="m-5 h-20 w-50 border-r-2 bg-amber-100"
-          >
-            {article.title}
-            {article.description ?? `: ${article.description}`}
-            <Button onClick={() => handleDeleteArticle(article.id)}>
-              Delete
-            </Button>
-          </div>
-        </Link>
+        <div className="w-50">
+          <Link key={article.id} href={article.url} target="_blank">
+            <div key={article.id} className="m-5 border-r-2 bg-amber-100">
+              {article.title}
+              {article.description && ` : ${article.description}`}
+              <Button onClick={() => handleDeleteArticle(article.id)}>
+                Delete
+              </Button>
+            </div>
+          </Link>
+        </div>
       ))}
     </div>
   );
