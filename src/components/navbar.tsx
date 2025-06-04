@@ -46,9 +46,7 @@ export function Navbar() {
             className="flex items-center space-x-2"
           >
             <BookOpen className="text-primary h-8 w-8" />
-            <span className="text-xl font-bold text-gray-900">
-              ArticleSaver
-            </span>
+            <span className="text-xl font-bold text-gray-900">Flipside</span>
           </Link>
 
           {/* Desktop Navigation */}
