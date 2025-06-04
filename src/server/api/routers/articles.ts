@@ -67,11 +67,12 @@ export const articlesRouter = createTRPCRouter({
     }),
 
   // PUT equivalent - update tags
-  updateTags: publicProcedure
+  updateArticle: publicProcedure
     .input(
       z.object({
         id: z.string().uuid(),
-        tags: z.string(),
+        title: z.string().optional(),
+        tags: z.string().optional(),
       }),
     )
     .mutation(async ({ ctx, input }) => {
@@ -81,7 +82,10 @@ export const articlesRouter = createTRPCRouter({
 
       return ctx.db
         .update(articles)
-        .set({ tags: input.tags })
+        .set({
+          title: input.title,
+          tags: input.tags,
+        })
         .where(and(eq(articles.id, input.id), eq(articles.userId, userId)));
     }),
 });

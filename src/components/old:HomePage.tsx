@@ -78,7 +78,7 @@ export default function HomePage() {
       });
     } catch (error) {
       // Error is already handled in onError callback
-      console.error("Failed to deleye article:", error);
+      console.error("Failed to delete article:", error);
     }
   };
 

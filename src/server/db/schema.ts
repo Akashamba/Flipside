@@ -23,10 +23,12 @@ export const articles = createTable(
     id: uuid("id").defaultRandom().primaryKey(),
     userId: text("user_id").notNull(), // Clerk user ID
     url: text("url").notNull(),
-    title: text("title"),
+    imageUrl: text("image_url"),
+    title: text("title").notNull(),
     description: text("description"),
     tags: text("tags"),
-    createdAt: timestamp("created_at").defaultNow(),
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+    updatedAt: timestamp("updated_at").defaultNow().notNull(),
   }),
   (t) => [index("title_idx").on(t.title)],
 );
