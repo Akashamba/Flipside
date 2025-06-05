@@ -21,7 +21,7 @@ export const articles = createTable(
   "article",
   () => ({
     id: uuid("id").defaultRandom().primaryKey(),
-    userId: text("user_id").notNull(), // Clerk user ID
+    userId: text("user_id").notNull(),
     url: text("url").notNull(),
     imageUrl: text("image_url"),
     title: text("title").notNull(),
