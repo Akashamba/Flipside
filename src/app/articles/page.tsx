@@ -30,12 +30,7 @@ export default function page() {
   }
 
   if (!session) {
-    return (
-      <div>
-        Something went wrong
-        {/* Should be buttons to sign in or go home */}
-      </div>
-    );
+    return <div>Please sign in to continue</div>;
   }
 
   return <ArticlesPage />;
