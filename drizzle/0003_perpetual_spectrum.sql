@@ -1,1 +1,0 @@
-ALTER TABLE "flipside_article" ALTER COLUMN "title" DROP NOT NULL;
