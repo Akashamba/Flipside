@@ -65,7 +65,7 @@ export function EditArticleModal({
       await updateArticle.mutateAsync({
         id: article.id,
         title: title,
-        tags: tags || article.tags,
+        tags: tags || article.tags || "",
       });
 
       onSave();
