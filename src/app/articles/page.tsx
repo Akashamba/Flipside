@@ -1,42 +1,42 @@
 "use client";
 
+import { LoadingSpinner } from "@/components/loading-spinner";
 import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import React from "react";
+import ArticlesPage from "./articles-page";
 
 export default function page() {
-  const signIn = async () => {
-    const data = await authClient.signIn.social({
-      provider: "google",
-      callbackURL: "/articles",
-    });
-    console.log(data);
-    // If ID token is provided no redirection will happen, and the user will be signed in directly.
-    // const data = await authClient.signIn.social({
-    //     provider: "google",
-    //     idToken: {
-    //         token: // Google ID Token,
-    //         accessToken: // Google Access Token
-    //     }
-    // })
-  };
+  const {
+    data: session,
+    isPending, //loading state
+    error, //error object
+    refetch, //refetch the session
+  } = authClient.useSession();
 
-  const signOut = async () => {
-    await authClient.signOut();
-  };
+  if (isPending) {
+    return <LoadingSpinner />;
+  }
 
-  const session = authClient.useSession();
-
-  return (
-    <div>
-      <p>Hello</p>
-      <div>
-        <Button onClick={() => signIn()}>Test</Button>
+  if (error) {
+    return (
+      <div className="p-8 text-red-600">
+        <p>Error loading articles: {error?.message}</p>
+        <Button onClick={() => refetch()} variant="outline" className="mt-2">
+          Retry
+        </Button>
       </div>
-      <div>{JSON.stringify(session)}</div>
+    );
+  }
+
+  if (!session) {
+    return (
       <div>
-        <Button onClick={() => signOut()}>signOut</Button>
+        Something went wrong
+        {/* Should be buttons to sign in or go home */}
       </div>
-    </div>
-  );
+    );
+  }
+
+  return <ArticlesPage />;
 }

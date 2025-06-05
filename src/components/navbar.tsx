@@ -15,13 +15,10 @@ import { authClient } from "@/lib/auth-client";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSignedIn, setIsSignedIn] = useState(true); // Mock auth state
   const user = authClient.useSession().data?.user;
 
-  const handleSignOut = () => {
-    console.log("Signing out...");
-    setIsSignedIn(false);
-    // In real app: signOut()
+  const handleSignOut = async () => {
+    await authClient.signOut();
   };
 
   const handleSignIn = async () => {
@@ -37,7 +34,7 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link
-            href={isSignedIn ? "/articles" : "/"}
+            href={user ? "/articles" : "/"}
             className="flex items-center space-x-2"
           >
             <BookOpen className="text-primary h-8 w-8" />
@@ -46,7 +43,7 @@ export function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden items-center space-x-8 md:flex">
-            {isSignedIn && (
+            {user && (
               <>
                 <Link
                   href="/articles"
