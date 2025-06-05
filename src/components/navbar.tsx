@@ -11,29 +11,21 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
-
-// Mock user state - in real app, this would come from Clerk
-const mockUser = {
-  id: "1",
-  name: "John Doe",
-  email: "john@example.com",
-  imageUrl: "/placeholder.svg?height=32&width=32",
-};
+import { authClient } from "@/lib/auth-client";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [isSignedIn, setIsSignedIn] = useState(true); // Mock auth state
+  const user = authClient.useSession().data?.user;
 
-  const handleSignOut = () => {
-    console.log("Signing out...");
-    setIsSignedIn(false);
-    // In real app: clerk.signOut()
+  const handleSignOut = async () => {
+    await authClient.signOut();
   };
 
-  const handleSignIn = () => {
-    console.log("Signing in...");
-    setIsSignedIn(true);
-    // In real app: clerk.openSignIn()
+  const handleSignIn = async () => {
+    await authClient.signIn.social({
+      provider: "google",
+      callbackURL: "/articles",
+    });
   };
 
   return (
@@ -42,7 +34,7 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           {/* Logo */}
           <Link
-            href={isSignedIn ? "/articles" : "/"}
+            href={user ? "/articles" : "/"}
             className="flex items-center space-x-2"
           >
             <BookOpen className="text-primary h-8 w-8" />
@@ -51,7 +43,7 @@ export function Navbar() {
 
           {/* Desktop Navigation */}
           <div className="hidden items-center space-x-8 md:flex">
-            {isSignedIn && (
+            {user && (
               <>
                 <Link
                   href="/articles"
@@ -71,7 +63,7 @@ export function Navbar() {
 
           {/* Auth Section */}
           <div className="hidden items-center space-x-4 md:flex">
-            {isSignedIn ? (
+            {user ? (
               <DropdownMenu>
                 <DropdownMenuTrigger asChild>
                   <Button
@@ -80,8 +72,8 @@ export function Navbar() {
                   >
                     <Avatar className="h-8 w-8">
                       <AvatarImage
-                        src={mockUser.imageUrl || "/placeholder.svg"}
-                        alt={mockUser.name}
+                        src={user.image || "/placeholder.svg"}
+                        alt={user.name}
                       />
                       <AvatarFallback>
                         <User className="h-4 w-4" />
@@ -91,9 +83,9 @@ export function Navbar() {
                 </DropdownMenuTrigger>
                 <DropdownMenuContent className="w-56" align="end" forceMount>
                   <DropdownMenuItem className="flex flex-col items-start">
-                    <div className="font-medium">{mockUser.name}</div>
+                    <div className="font-medium">{user.name}</div>
                     <div className="text-muted-foreground text-sm">
-                      {mockUser.email}
+                      {user.email}
                     </div>
                   </DropdownMenuItem>
                   <DropdownMenuItem onClick={handleSignOut}>
@@ -127,7 +119,7 @@ export function Navbar() {
         {isMenuOpen && (
           <div className="animate-fade-in md:hidden">
             <div className="space-y-1 border-t px-2 pt-2 pb-3 sm:px-3">
-              {isSignedIn ? (
+              {user ? (
                 <>
                   <Link
                     href="/articles"
@@ -145,9 +137,9 @@ export function Navbar() {
                   </Link>
                   <div className="border-t pt-2">
                     <div className="px-3 py-2">
-                      <div className="font-medium">{mockUser.name}</div>
+                      <div className="font-medium">{user.name}</div>
                       <div className="text-muted-foreground text-sm">
-                        {mockUser.email}
+                        {user.email}
                       </div>
                     </div>
                     <Button

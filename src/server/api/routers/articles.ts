@@ -2,9 +2,10 @@ import { z } from "zod";
 import { createTRPCRouter, publicProcedure } from "@/server/api/trpc";
 import { articles } from "@/server/db/schema";
 import { eq, and, desc } from "drizzle-orm";
-import { auth } from "@clerk/nextjs/server";
 import { TRPCError } from "@trpc/server";
 import { getMetadata } from "@/lib/utils";
+import { auth } from "@/lib/auth";
+import { headers } from "next/headers";
 
 export const articlesRouter = createTRPCRouter({
   // POST equivalent - save URL
@@ -19,8 +20,11 @@ export const articlesRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       // Manual auth check
-      const { userId } = await auth();
-      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+      const session = await auth.api.getSession({
+        headers: await headers(), // you need to pass the headers object.
+      });
+      if (!session?.session.userId)
+        throw new TRPCError({ code: "UNAUTHORIZED" });
 
       const metadata = await getMetadata(input.url);
 
@@ -28,7 +32,7 @@ export const articlesRouter = createTRPCRouter({
       const article = await ctx.db
         .insert(articles)
         .values({
-          userId: userId,
+          userId: session?.session.userId,
           url: input.url,
           // eslint-disable-next-line @typescript-eslint/prefer-nullish-coalescing
           title: input.title || metadata.title || input.url,
@@ -43,13 +47,16 @@ export const articlesRouter = createTRPCRouter({
   // GET equivalent - fetch user articles
   getAll: publicProcedure.query(async ({ ctx }) => {
     // Manual auth check
-    const { userId } = await auth();
-    if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+    const session = await auth.api.getSession({
+      headers: await headers(), // you need to pass the headers object.
+    });
+
+    if (!session?.session.userId) throw new TRPCError({ code: "UNAUTHORIZED" });
 
     return ctx.db
       .select()
       .from(articles)
-      .where(eq(articles.userId, userId))
+      .where(eq(articles.userId, session?.session.userId))
       .orderBy(desc(articles.createdAt));
   }),
 
@@ -58,12 +65,20 @@ export const articlesRouter = createTRPCRouter({
     .input(z.object({ id: z.string().uuid() }))
     .mutation(async ({ ctx, input }) => {
       // Manual auth check
-      const { userId } = await auth();
-      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+      const session = await auth.api.getSession({
+        headers: await headers(), // you need to pass the headers object.
+      });
+      if (!session?.session.userId)
+        throw new TRPCError({ code: "UNAUTHORIZED" });
 
       return ctx.db
         .delete(articles)
-        .where(and(eq(articles.id, input.id), eq(articles.userId, userId)));
+        .where(
+          and(
+            eq(articles.id, input.id),
+            eq(articles.userId, session?.session.userId),
+          ),
+        );
     }),
 
   // PUT equivalent - update tags
@@ -77,8 +92,11 @@ export const articlesRouter = createTRPCRouter({
     )
     .mutation(async ({ ctx, input }) => {
       // Manual auth check
-      const { userId } = await auth();
-      if (!userId) throw new TRPCError({ code: "UNAUTHORIZED" });
+      const session = await auth.api.getSession({
+        headers: await headers(), // you need to pass the headers object.
+      });
+      if (!session?.session.userId)
+        throw new TRPCError({ code: "UNAUTHORIZED" });
 
       return ctx.db
         .update(articles)
@@ -86,6 +104,11 @@ export const articlesRouter = createTRPCRouter({
           title: input.title,
           tags: input.tags,
         })
-        .where(and(eq(articles.id, input.id), eq(articles.userId, userId)));
+        .where(
+          and(
+            eq(articles.id, input.id),
+            eq(articles.userId, session?.session.userId),
+          ),
+        );
     }),
 });
