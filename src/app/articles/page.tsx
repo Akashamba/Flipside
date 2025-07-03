@@ -5,8 +5,15 @@ import { Button } from "@/components/ui/button";
 import { authClient } from "@/lib/auth-client";
 import React from "react";
 import ArticlesPage from "./articles-page";
+import { useRouter } from "next/navigation";
 
 export default function page() {
+  const router = useRouter();
+
+  React.useEffect(() => {
+    router.replace(window.location.pathname);
+  }, []);
+
   const {
     data: session,
     isPending, //loading state
