@@ -12,13 +12,16 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export function Navbar() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const user = authClient.useSession().data?.user;
+  const router = useRouter();
 
   const handleSignOut = async () => {
     await authClient.signOut();
+    router.push("/");
   };
 
   const handleSignIn = async () => {
