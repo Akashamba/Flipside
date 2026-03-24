@@ -3,12 +3,14 @@
 import { useState, useMemo } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Plus, Search } from "lucide-react";
+import { LogOut, Plus, Search } from "lucide-react";
 import { ArticleList } from "@/components/article-list";
 import { NewArticleModal } from "@/components/modals/new-article-modal";
 import { EditArticleModal } from "@/components/modals/edit-article-modal";
 import type { Article } from "@/lib/types";
 import { api } from "@/trpc/react";
+import { authClient } from "@/lib/auth-client";
+import { useRouter } from "next/navigation";
 
 export default function ArticlesPage() {
   const {
@@ -17,6 +19,7 @@ export default function ArticlesPage() {
     isError,
     error,
   } = api.articles.getAll.useQuery();
+  const router = useRouter();
   const [searchQuery, setSearchQuery] = useState("");
   const [isNewArticleModalOpen, setIsNewArticleModalOpen] = useState(false);
   const [isEditArticleModalOpen, setIsEditArticleModalOpen] = useState(false);
@@ -97,6 +100,11 @@ export default function ArticlesPage() {
     return <div>Something went wrong</div>;
   }
 
+  const handleSignOut = async () => {
+    await authClient.signOut();
+    router.push("/");
+  };
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
       {/* Header */}
@@ -107,10 +115,17 @@ export default function ArticlesPage() {
             {articles.length} article{articles.length !== 1 ? "s" : ""} saved
           </p>
         </div>
+        <div className="flex items-center gap-2">
         <Button onClick={() => setIsNewArticleModalOpen(true)}>
           <Plus className="mr-2 h-4 w-4" />
           Add New Article
         </Button>
+        <Button onClick={handleSignOut}>
+          <LogOut className="mr-2 h-4 w-4" />
+          Sign out
+        </Button>
+
+        </div>
       </div>
 
       {/* Search Bar */}

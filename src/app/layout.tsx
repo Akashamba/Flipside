@@ -1,16 +1,22 @@
 import type React from "react";
 import type { Metadata } from "next";
-import { Inter } from "next/font/google";
+import { Inter, Source_Serif_4 } from "next/font/google";
 import "@/styles/globals.css";
-import { Navbar } from "@/components/navbar";
-import { Footer } from "@/components/footer";
 import { TRPCReactProvider } from "@/trpc/react";
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({
+  subsets: ["latin"],
+  variable: "--font-inter",
+});
+
+const sourceSerif = Source_Serif_4({
+  subsets: ["latin"],
+  variable: "--font-serif",
+});
 
 export const metadata: Metadata = {
-  title: "Flipside - Save and Organize Your Articles",
-  description: "Save articles from URLs and organize them in one place",
+  title: "Stash - Your Calm Reading Space",
+  description: "Save articles, read later. A premium read-it-later experience.",
   icons: [{ rel: "icon", url: "/favicon.png" }],
 };
 
@@ -21,13 +27,11 @@ export default function RootLayout({
 }) {
   return (
     <TRPCReactProvider>
-      <html lang="en">
-        <body className={inter.className}>
-          <div className="flex min-h-screen flex-col">
-            <Navbar />
-            <main className="flex-1">{children}</main>
-            <Footer />
-          </div>
+      <html lang="en" className="dark">
+        <body
+          className={`${inter.variable} ${sourceSerif.variable} font-sans antialiased`}
+        >
+          <div className="min-h-screen">{children}</div>
         </body>
       </html>
     </TRPCReactProvider>
